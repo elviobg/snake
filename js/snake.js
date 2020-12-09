@@ -4,7 +4,13 @@ let box = 32;
 let snake = []
 let backgroundColor = "#84a140"
 let snakeColor = "#3e5bc2"
-let direction = "left"
+let directionKeyCodes = {
+    LEFT: 37,
+    UP: 40,
+    RIGHT: 39,
+    DOWN: 38
+  };
+  let currentDirection = directionKeyCodes.LEFT
 
 function createBackGround()
 {
@@ -33,6 +39,18 @@ function start()
 {
     createBackGround();
     createSnake();
+    document.addEventListener('keydown', getDirections);
+}
+
+function getDirections(event){
+    if(event.keyCode == directionKeyCodes.LEFT && currentDirection != directionKeyCodes.RIGHT)
+        currentDirection = directionKeyCodes.LEFT
+    if(event.keyCode == directionKeyCodes.RIGHT && currentDirection != directionKeyCodes.LEFT)
+        currentDirection = directionKeyCodes.RIGHT
+    if(event.keyCode == directionKeyCodes.UP && currentDirection != directionKeyCodes.DOWN)
+        currentDirection = directionKeyCodes.UP
+    if(event.keyCode == directionKeyCodes.DOWN && currentDirection != directionKeyCodes.UP)
+        currentDirection = directionKeyCodes.DOWN
 }
 
 function updateGame()
@@ -43,26 +61,21 @@ function updateGame()
     let snakeX = snake[0].x
     let snakeY = snake[0].y
 
-    if(direction == 'right') 
+    if(currentDirection == directionKeyCodes.RIGHT) 
         snakeX += box;
-    else if(direction == 'left') 
+    else if(currentDirection == directionKeyCodes.LEFT) 
         snakeX -= box;
-    else if(direction == 'up') 
+    else if(currentDirection == directionKeyCodes.UP) 
         snakeY += box;
-    else if(direction == 'down') 
+    else if(currentDirection == directionKeyCodes.DOWN) 
         snakeY -= box;
 
     snake.pop();
-
-    let newHead = {
+    snake.unshift({
         x: snakeX,
         y: snakeY
-    }
-
-    snake.unshift(newHead);
-
-    
+    });
 }
 
 start();
-let game = setInterval(updateGame, 100)
+let game = setInterval(updateGame, 500)
