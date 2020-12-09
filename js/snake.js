@@ -1,19 +1,27 @@
-let canvas = document.getElementById('snake');
-let context = canvas.getContext('2d');
-let box = 32;
+let context;
+const box = 32;
+const height = 512;
+const width = 512;
+
 let snake = []
 let backgroundColor = "#84a140"
 let snakeColor = "#3e5bc2"
-let directionKeyCodes = {
+
+const directionKeyCodes = {
     LEFT: 37,
-    UP: 40,
+    DOWN: 38,
     RIGHT: 39,
-    DOWN: 38
-  };
-  let currentDirection = directionKeyCodes.LEFT
+    UP: 40
+};
+
+let currentDirection = directionKeyCodes.LEFT
 
 function createBackGround()
 {
+    let canvas = document.getElementById('snake');
+    canvas.width = width
+    canvas.height = height
+    context = canvas.getContext('2d');
     context.fillStyle = backgroundColor;
     context.fillRect(0, 0, 16*box, 16*box)
 }
@@ -62,13 +70,29 @@ function updateGame()
     let snakeY = snake[0].y
 
     if(currentDirection == directionKeyCodes.RIGHT) 
+    {
         snakeX += box;
+        if(snakeX > width)
+            snakeX = 0
+    }
     else if(currentDirection == directionKeyCodes.LEFT) 
+    {
         snakeX -= box;
+        if(snakeX < 0)
+            snakeX = width
+    }
     else if(currentDirection == directionKeyCodes.UP) 
+    {
         snakeY += box;
+        if(snakeY > height)
+            snakeY = 0
+    }
     else if(currentDirection == directionKeyCodes.DOWN) 
+    {
         snakeY -= box;
+        if(snakeY < 0)
+            snakeY = height
+    }
 
     snake.pop();
     snake.unshift({
@@ -78,4 +102,4 @@ function updateGame()
 }
 
 start();
-let game = setInterval(updateGame, 500)
+let game = setInterval(updateGame, 200)
