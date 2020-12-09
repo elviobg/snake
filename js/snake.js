@@ -10,7 +10,6 @@ let powerUPColor = "#e82330"
 let powerUp;
 let points;
 
-
 const directionKeyCodes = {
     LEFT: 37,
     DOWN: 38,
@@ -69,9 +68,6 @@ function getDirections(event){
 
 function updateGame()
 {
-    createBackGround();
-    updateSnake();
-
     let snakeX = snake[0].x
     let snakeY = snake[0].y
 
@@ -100,11 +96,23 @@ function updateGame()
             snakeY = height - box
     }
 
-    snake.pop();
+    if(snakeX == powerUp.x && snakeY == powerUp.y)
+    {
+        createPowerUpPosition();
+        points++;
+    }        
+    else
+    {
+        snake.pop();
+    }
+
     snake.unshift({
         x: snakeX,
         y: snakeY
     });
+
+    createBackGround();
+    updateSnake();
     drawPowerUp();
 }
 
