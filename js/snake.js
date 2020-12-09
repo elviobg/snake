@@ -6,6 +6,10 @@ const width = 512;
 let snake = []
 let backgroundColor = "#84a140"
 let snakeColor = "#3e5bc2"
+let powerUPColor = "#e82330"
+let powerUp;
+let points;
+
 
 const directionKeyCodes = {
     LEFT: 37,
@@ -47,6 +51,8 @@ function start()
 {
     createBackGround();
     createSnake();
+    createPowerUpPosition();
+    points = 0;
     document.addEventListener('keydown', getDirections);
 }
 
@@ -72,26 +78,26 @@ function updateGame()
     if(currentDirection == directionKeyCodes.RIGHT) 
     {
         snakeX += box;
-        if(snakeX > width)
+        if(snakeX >= width)
             snakeX = 0
     }
     else if(currentDirection == directionKeyCodes.LEFT) 
     {
         snakeX -= box;
         if(snakeX < 0)
-            snakeX = width
+            snakeX = width - box
     }
     else if(currentDirection == directionKeyCodes.UP) 
     {
         snakeY += box;
-        if(snakeY > height)
+        if(snakeY >= height)
             snakeY = 0
     }
     else if(currentDirection == directionKeyCodes.DOWN) 
     {
         snakeY -= box;
         if(snakeY < 0)
-            snakeY = height
+            snakeY = height - box
     }
 
     snake.pop();
@@ -99,7 +105,25 @@ function updateGame()
         x: snakeX,
         y: snakeY
     });
+    drawPowerUp();
+}
+
+function createPowerUpPosition()
+{
+    let possibleXs = width / box;
+    let possibleYs = height / box;
+
+    powerUp = {
+        x: Math.floor(Math.random() * possibleXs) * box,
+        y: Math.floor(Math.random() * possibleYs) * box
+    }
+}
+
+function drawPowerUp()
+{
+    context.fillStyle = powerUPColor;
+    context.fillRect(powerUp.x, powerUp.y, box, box);
 }
 
 start();
-let game = setInterval(updateGame, 200)
+let game = setInterval(updateGame, 500)
