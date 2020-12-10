@@ -5,9 +5,9 @@ const height = 512;
 const width = 512;
 
 let snake = []
-let backgroundColor = "#84a140"
-let snakeColor = "#3e5bc2"
-let powerUPColor = "#e82330"
+let backgroundColor;
+let snakeColor;
+let powerUPColor;
 let powerUp;
 let points;
 
@@ -18,6 +18,18 @@ const directionKeyCodes = {
     UP: 40
 };
 let currentDirection;
+
+function randomColor()
+{
+    return Math.floor(Math.random() * 255)
+}
+
+function updateColors()
+{
+    backgroundColor = "rgb("+randomColor()+","+randomColor()+","+randomColor()+")"
+    snakeColor = "rgb("+randomColor()+","+randomColor()+","+randomColor()+")"
+    powerUPColor = "rgb("+randomColor()+","+randomColor()+","+randomColor()+")"
+}
 
 function createBackGround()
 {
@@ -136,6 +148,7 @@ function updateGame()
     });
 
     if(!die){
+        updateColors();
         updateBackGround();
         updateSnake();
         drawPowerUp();
@@ -159,4 +172,5 @@ function drawPowerUp()
     context.fillRect(powerUp.x, powerUp.y, box, box);
 }
 
+updateColors();
 createBackGround();
