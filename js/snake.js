@@ -1,4 +1,5 @@
 let context;
+let game;
 const box = 32;
 const height = 512;
 const width = 512;
@@ -9,7 +10,6 @@ let snakeColor = "#3e5bc2"
 let powerUPColor = "#e82330"
 let powerUp;
 let points;
-let game = setInterval(updateGame, 100)
 
 const directionKeyCodes = {
     LEFT: 37,
@@ -17,8 +17,7 @@ const directionKeyCodes = {
     RIGHT: 39,
     UP: 40
 };
-
-let currentDirection = directionKeyCodes.LEFT
+let currentDirection;
 
 function createBackGround()
 {
@@ -38,6 +37,7 @@ function updateBackGround()
 
 function createSnake()
 {
+    snake = []
     snake[0] = {
         x: 8*box,
         y: 8*box
@@ -58,7 +58,10 @@ function start()
     createBackGround();
     createSnake();
     createPowerUpPosition();
+    clearInterval(game);
+    game = setInterval(updateGame, 100)
     points = 0;
+    currentDirection = directionKeyCodes.LEFT
     document.addEventListener('keydown', getDirections);
 }
 
@@ -75,7 +78,6 @@ function getDirections(event){
 
 function endGame(){
     clearInterval(game);
-    alert('perdeu playboy! =,D\nVc comeu '+points+' vezes\nÉ o comedor!')
 }
 
 function updateGame()
@@ -158,4 +160,3 @@ function drawPowerUp()
 }
 
 createBackGround();
-start(); 

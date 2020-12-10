@@ -1,0 +1,37 @@
+/* reset css */
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    height: 95vh;
+    width: 95vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:white;
+    color: rgb(165, 52, 52);
+}
+
+/* TODO: estilização adequada do botão */
+.button
+{
+    background-color: rgba(0,0,0,.50);
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    margin-right: 20px;
+    font-size: 12px;
+    cursor:pointer;
+    transition: .5s ease all;
+}
+
+.button:hover
+{
+    background-color: whitesmoke;
+    color: black;
+}
