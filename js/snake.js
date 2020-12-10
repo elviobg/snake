@@ -9,6 +9,7 @@ let snakeColor = "#3e5bc2"
 let powerUPColor = "#e82330"
 let powerUp;
 let points;
+let game = setInterval(updateGame, 100)
 
 const directionKeyCodes = {
     LEFT: 37,
@@ -25,6 +26,12 @@ function createBackGround()
     canvas.width = width
     canvas.height = height
     context = canvas.getContext('2d');
+    context.fillStyle = backgroundColor;
+    context.fillRect(0, 0, 16*box, 16*box)
+}
+
+function updateBackGround()
+{
     context.fillStyle = backgroundColor;
     context.fillRect(0, 0, 16*box, 16*box)
 }
@@ -66,10 +73,25 @@ function getDirections(event){
         currentDirection = directionKeyCodes.DOWN
 }
 
+function endGame(){
+    clearInterval(game);
+    alert('perdeu playboy! =,D\nVc comeu '+points+' vezes\nÉ o comedor!')
+}
+
 function updateGame()
 {
     let snakeX = snake[0].x
     let snakeY = snake[0].y
+    let die = false
+
+    for(i=1; i<snake.length; i++)
+    {
+        if(snakeX == snake[i].x && snakeY == snake[i].y)
+        {
+            die = true;
+            endGame()
+        }
+    }
 
     if(currentDirection == directionKeyCodes.RIGHT) 
     {
@@ -111,9 +133,11 @@ function updateGame()
         y: snakeY
     });
 
-    createBackGround();
-    updateSnake();
-    drawPowerUp();
+    if(!die){
+        updateBackGround();
+        updateSnake();
+        drawPowerUp();
+    }  
 }
 
 function createPowerUpPosition()
@@ -133,5 +157,5 @@ function drawPowerUp()
     context.fillRect(powerUp.x, powerUp.y, box, box);
 }
 
-start();
-let game = setInterval(updateGame, 500)
+createBackGround();
+start(); 
