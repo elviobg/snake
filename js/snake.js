@@ -10,8 +10,11 @@ let snakeColor;
 let powerUPColor;
 let powerUp;
 let points;
+let gamePaused;
+let gameRunning;
 
-const directionKeyCodes = {
+const keyCodesASCII = {
+    SPACE: 32,
     LEFT: 37,
     DOWN: 38,
     RIGHT: 39,
@@ -21,14 +24,16 @@ let currentDirection;
 
 function randomColor()
 {
-    return Math.floor(Math.random() * 255)
+    return "rgb("+ Math.floor(Math.random() * 255)
+            + ","+Math.floor(Math.random() * 255) +","
+            + Math.floor(Math.random() * 255) +")"
 }
 
 function updateColors()
 {
-    backgroundColor = "rgb("+randomColor()+","+randomColor()+","+randomColor()+")"
-    snakeColor = "rgb("+randomColor()+","+randomColor()+","+randomColor()+")"
-    powerUPColor = "rgb("+randomColor()+","+randomColor()+","+randomColor()+")"
+    backgroundColor = randomColor()
+    snakeColor = randomColor()
+    powerUPColor = randomColor()
 }
 
 function createBackGround()
@@ -65,6 +70,12 @@ function updateSnake()
     }
 }
 
+function createGame()
+{
+    document.addEventListener('keydown', pushButton);
+    gameRunning = false;
+}
+
 function start()
 {
     createBackGround();
@@ -73,59 +84,81 @@ function start()
     clearInterval(game);
     game = setInterval(updateGame, 100)
     points = 0;
-    currentDirection = directionKeyCodes.LEFT
-    document.addEventListener('keydown', getDirections);
+    currentDirection = keyCodesASCII.LEFT;
+    gamePaused = false;
+    gameRunning = true;
 }
 
-function getDirections(event){
-    if(event.keyCode == directionKeyCodes.LEFT && currentDirection != directionKeyCodes.RIGHT)
-        currentDirection = directionKeyCodes.LEFT
-    if(event.keyCode == directionKeyCodes.RIGHT && currentDirection != directionKeyCodes.LEFT)
-        currentDirection = directionKeyCodes.RIGHT
-    if(event.keyCode == directionKeyCodes.UP && currentDirection != directionKeyCodes.DOWN)
-        currentDirection = directionKeyCodes.UP
-    if(event.keyCode == directionKeyCodes.DOWN && currentDirection != directionKeyCodes.UP)
-        currentDirection = directionKeyCodes.DOWN
+function pushButton()
+{
+    if (!gamePaused)
+        getDirections(event.keyCode)
+    if (event.keyCode == keyCodesASCII.SPACE)
+        if (gameRunning)
+            pauseButtonPushed()
+        else
+            start()
 }
 
-function endGame(){
+function getDirections(buttonKeyCode)
+{
+    if(buttonKeyCode == keyCodesASCII.LEFT && currentDirection != keyCodesASCII.RIGHT)
+        currentDirection = keyCodesASCII.LEFT
+    if(buttonKeyCode == keyCodesASCII.RIGHT && currentDirection != keyCodesASCII.LEFT)
+        currentDirection = keyCodesASCII.RIGHT
+    if(buttonKeyCode == keyCodesASCII.UP && currentDirection != keyCodesASCII.DOWN)
+        currentDirection = keyCodesASCII.UP
+    if(buttonKeyCode == keyCodesASCII.DOWN && currentDirection != keyCodesASCII.UP)
+        currentDirection = keyCodesASCII.DOWN
+}
+
+function pauseButtonPushed()
+{
+    gamePaused = !gamePaused
+    if(gamePaused)
+        clearInterval(game);
+    else
+        game = setInterval(updateGame, 100)
+}
+
+function endGame()
+{
     clearInterval(game);
+    gameRunning = false
 }
 
 function updateGame()
 {
     let snakeX = snake[0].x
     let snakeY = snake[0].y
-    let die = false
 
     for(i=1; i<snake.length; i++)
     {
         if(snakeX == snake[i].x && snakeY == snake[i].y)
         {
-            die = true;
             endGame()
         }
     }
 
-    if(currentDirection == directionKeyCodes.RIGHT) 
+    if(currentDirection == keyCodesASCII.RIGHT) 
     {
         snakeX += box;
         if(snakeX >= width)
             snakeX = 0
     }
-    else if(currentDirection == directionKeyCodes.LEFT) 
+    else if(currentDirection == keyCodesASCII.LEFT) 
     {
         snakeX -= box;
         if(snakeX < 0)
             snakeX = width - box
     }
-    else if(currentDirection == directionKeyCodes.UP) 
+    else if(currentDirection == keyCodesASCII.UP) 
     {
         snakeY += box;
         if(snakeY >= height)
             snakeY = 0
     }
-    else if(currentDirection == directionKeyCodes.DOWN) 
+    else if(currentDirection == keyCodesASCII.DOWN) 
     {
         snakeY -= box;
         if(snakeY < 0)
@@ -147,7 +180,7 @@ function updateGame()
         y: snakeY
     });
 
-    if(!die){
+    if(gameRunning){
         updateColors();
         updateBackGround();
         updateSnake();
